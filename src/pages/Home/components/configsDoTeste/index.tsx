@@ -2,8 +2,59 @@ import { ChangeEvent } from "react";
 import SelectInput from "../../../../components/selectInput";
 import Titulo from "../../../../components/titulo";
 import Section from "../../../../components/section";
+import { runChat } from "./config/gemini.ts";
+
+async function runMyRunChat(
+  jogo: String = "The Witcher 3",
+  specs: String = "Ryzen 5 5600G, RX 550, 16gb ram, ASUS Prime - A520M-E",
+  fps: String = "60"
+) {
+  function parseCustomString(dataString: String) {
+    // Substituir chaves simples por chaves duplas e os dois pontos por dois pontos com espaço
+    const jsonString = dataString
+      .replace(/([a-zA-Z0-9_]+):/g, '"$1":') // Coloca aspas em torno das chaves
+      .replace(/'/g, '"'); // Substitui aspas simples por aspas duplas
+
+    // Tentar converter a string JSON em um objeto
+    try {
+      const jsonObject = JSON.parse(jsonString);
+      return jsonObject;
+    } catch (error) {
+      console.error("Erro ao parsear a string:", error);
+      return null;
+    }
+  }
+  const formato = `{
+    desempenho_estimado: {
+      "1080p": {
+        baixo: {
+          fps_medio: "(mediaDeFPS)",
+          percentual_desempenho: "(percentualDesempenho)",
+        },
+        medio: {
+          fps_medio: "(mediaDeFPS)",
+          percentual_desempenho: "(percentualDesempenho)",
+        },
+        alto: {
+          fps_medio: "(mediaDeFPS)",
+          percentual_desempenho: "(percentualDesempenho)",
+        },
+        ultra: {
+          fps_medio: "(mediaDeFPS)",
+          percentual_desempenho: "(percentualDesempenho)",
+        },
+      },
+    },
+  }`;
+
+  const prompt = `Com o jogo: ${jogo}, e o PC com as especificações: ${specs} quero saber qual a porcentagem de chance de rodar o jogo numa faixa de ${fps}FPS, quero que me responda nesse formato: ${formato}, não quero nada adicional, apenas isso, nada mais, nada mesmo, não precisa colocar as aspas e nem o nome json tbm`;
+  const response = await runChat(prompt);
+  const aquiPeloAmo = parseCustomString(response);
+  console.log(aquiPeloAmo);
+}
 
 const ConfigsDoTeste = () => {
+  runMyRunChat();
   return (
     <Section>
       <Titulo>Configuraçoes do Teste</Titulo>
