@@ -1,16 +1,15 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction } from "react";
+import { SpecsInterface } from "../../../../@types/specsInterface";
 
-const initEspecs = {
-  placaDeVideo: "RX 570",
-  processador: "Ryzen 5 5600",
-  memoriaRam: "16 GB (dual channel)",
-  placaMae: "ASUS Prime - A520M-E",
-};
+interface IProps {
+  especificacoesPersonalizadas: SpecsInterface;
+  setEspecificacoesPersonalizadas: Dispatch<SetStateAction<SpecsInterface>>;
+}
 
-const Especificacoes = () => {
-  const [especificacoesPersonalizadas, setEspecificacoesPersonalizadas] =
-    useState(initEspecs);
-
+const Especificacoes = ({
+  especificacoesPersonalizadas,
+  setEspecificacoesPersonalizadas,
+}: IProps) => {
   const handleInputChange = (chave: string, valor: string) => {
     setEspecificacoesPersonalizadas((prev) => ({
       ...prev,

@@ -1,15 +1,21 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import SelectInput from "../../../../components/selectInput";
 import Titulo from "../../../../components/titulo";
 import Section from "../../../../components/section";
 import { runChat } from "./config/gemini.ts";
+import { SpecsInterface } from "../../../../@types/specsInterface.ts";
+
+interface IProps {
+  especificacoesPersonalizadas: SpecsInterface;
+  setEspecificacoesPersonalizadas: Dispatch<SetStateAction<SpecsInterface>>;
+}
 
 async function runMyRunChat(
-  jogo: String = "The Witcher 3",
-  specs: String = "Ryzen 5 5600G, RX 550, 16gb ram, ASUS Prime - A520M-E",
-  fps: String = "60"
+  jogo: string = "The witcher 3",
+  specs: string = "Ryzen 5 5600, RX 570, Ram 16gb",
+  fps: string = "3627"
 ) {
-  function parseCustomString(dataString: String) {
+  function parseCustomString(dataString: string) {
     // Substituir chaves simples por chaves duplas e os dois pontos por dois pontos com espaço
     const jsonString = dataString
       .replace(/([a-zA-Z0-9_]+):/g, '"$1":') // Coloca aspas em torno das chaves
@@ -49,11 +55,16 @@ async function runMyRunChat(
 
   const prompt = `Com o jogo: ${jogo}, e o PC com as especificações: ${specs} quero saber qual a porcentagem de chance de rodar o jogo numa faixa de ${fps}FPS, quero que me responda nesse formato: ${formato}, não quero nada adicional, apenas isso, nada mais, nada mesmo, não precisa colocar as aspas e nem o nome json tbm`;
   const response = await runChat(prompt);
-  const aquiPeloAmo = parseCustomString(response);
-  console.log(aquiPeloAmo);
+  const resultado = parseCustomString(response);
+  if (resultado) {
+    console.log(resultado);
+  }
 }
 
-const ConfigsDoTeste = () => {
+const ConfigsDoTeste = ({
+  especificacoesPersonalizadas,
+  setEspecificacoesPersonalizadas,
+}: IProps) => {
   runMyRunChat();
   return (
     <Section>
@@ -80,6 +91,20 @@ const ConfigsDoTeste = () => {
                 { label: "Alto", value: 2 },
                 { label: "Ultra", value: 2 },
               ]}
+            />
+          </div>
+
+          <div className="flex flex-col items-start justify-between gap-4 mb-1">
+            <label className="block font-semibold">Jogo:</label>
+            <input
+              value={especificacoesPersonalizadas.jogo}
+              onChange={(e) =>
+                setEspecificacoesPersonalizadas((prev) => ({
+                  ...prev,
+                  jogo: e.target.value,
+                }))
+              }
+              className="border border-zinc-400 rounded-md w-full outline-none pl-2 py-1"
             />
           </div>
           <div className="flex items-center justify-between gap-4">
