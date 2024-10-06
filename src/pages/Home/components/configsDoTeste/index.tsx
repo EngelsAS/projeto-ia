@@ -1,7 +1,8 @@
-import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import SelectInput from "../../../../components/selectInput";
 import Titulo from "../../../../components/titulo";
 import Section from "../../../../components/section";
+import ResultadosDoTeste from "../resultadosDoTeste/index"; // Importando o componente ResultadosDoTeste
 import { runChat } from "./config/gemini.ts";
 import { SpecsInterface } from "../../../../@types/specsInterface.ts";
 
@@ -11,17 +12,15 @@ interface IProps {
 }
 
 async function runMyRunChat(
-  jogo: string = "The witcher 3",
-  specs: string = "Ryzen 5 5600, RX 570, Ram 16gb",
+  jogo: string = "The Witcher 3",
+  specs: string = "Ryzen 5 5600, RX 570, Ram 16GB",
   fps: string = "3627"
 ) {
   function parseCustomString(dataString: string) {
-    // Substituir chaves simples por chaves duplas e os dois pontos por dois pontos com espaço
     const jsonString = dataString
-      .replace(/([a-zA-Z0-9_]+):/g, '"$1":') // Coloca aspas em torno das chaves
-      .replace(/'/g, '"'); // Substitui aspas simples por aspas duplas
+      .replace(/([a-zA-Z0-9_]+):/g, '"$1":')
+      .replace(/'/g, '"');
 
-    // Tentar converter a string JSON em um objeto
     try {
       const jsonObject = JSON.parse(jsonString);
       return jsonObject;
@@ -30,6 +29,7 @@ async function runMyRunChat(
       return null;
     }
   }
+
   const formato = `{
     desempenho_estimado: {
       "1080p": {
@@ -54,27 +54,44 @@ async function runMyRunChat(
   }`;
 
   const prompt = `Com o jogo: ${jogo}, e o PC com as especificações: ${specs} quero saber qual a porcentagem de chance de rodar o jogo numa faixa de ${fps}FPS, quero que me responda nesse formato: ${formato}, não quero nada adicional, apenas isso, nada mais, nada mesmo, não precisa colocar as aspas e nem o nome json tbm`;
+
   const response = await runChat(prompt);
   const resultado = parseCustomString(response);
-  if (resultado) {
-    console.log(resultado);
-  }
+
+  return resultado; // Retorna o resultado para ser utilizado no componente
 }
 
 const ConfigsDoTeste = ({
   especificacoesPersonalizadas,
   setEspecificacoesPersonalizadas,
 }: IProps) => {
-  runMyRunChat();
+  const [resultado, setResultado] = useState<any>(null); // Adicionando o estado resultado
+  const [isLoading, setIsLoading] = useState(false); // Estado para gerenciar o loading
+
+  // Função para lidar com a execução do teste ao clicar no botão
+  const handleTestar = async () => {
+    setIsLoading(true);
+    try {
+      const resultadoApi = await runMyRunChat(
+        especificacoesPersonalizadas.jogo,
+        `${especificacoesPersonalizadas.placaDeVideo}, ${especificacoesPersonalizadas.processador}, ${especificacoesPersonalizadas.memoriaRam}`,
+        "3627"
+      );
+      setResultado(resultadoApi); // Armazena o resultado da API no estado
+    } catch (error) {
+      console.error("Erro ao executar o teste:", error);
+    } finally {
+      setIsLoading(false); // Finaliza o loading
+    }
+  };
+
   return (
     <Section>
-      <Titulo>Configuraçoes do Teste</Titulo>
+      <Titulo>Configurações do Teste</Titulo>
       <div className="flex w-full justify-between">
         <div className="flex flex-col gap-3">
           <div>
-            <label className="block mb-1 font-semibold">
-              Especificações do teste
-            </label>
+            <label className="block mb-1 font-semibold">Especificações do teste</label>
             <SelectInput
               options={[
                 { label: "Especificações da Máquina", value: 1 },
@@ -88,8 +105,8 @@ const ConfigsDoTeste = ({
               options={[
                 { label: "Baixo", value: 1 },
                 { label: "Médio", value: 2 },
-                { label: "Alto", value: 2 },
-                { label: "Ultra", value: 2 },
+                { label: "Alto", value: 3 },
+                { label: "Ultra", value: 4 },
               ]}
             />
           </div>
@@ -108,9 +125,7 @@ const ConfigsDoTeste = ({
             />
           </div>
           <div className="flex items-center justify-between gap-4">
-            <label className="inline-block mb-1 font-semibold">
-              Taxa de frames desejada:
-            </label>
+            <label className="inline-block mb-1 font-semibold">Taxa de frames desejada:</label>
             <input
               className="border-b border-zinc-400 max-w-14 outline-none px-2"
               type="text"
@@ -122,9 +137,7 @@ const ConfigsDoTeste = ({
         </div>
         <div className="flex flex-col justify-between items-center">
           <div>
-            <label className="block mb-1 font-semibold">
-              Tipo da Aplicação
-            </label>
+            <label className="block mb-1 font-semibold">Tipo da Aplicação</label>
             <SelectInput
               options={[
                 { label: "Jogo de Computador", value: 1 },
@@ -133,11 +146,25 @@ const ConfigsDoTeste = ({
             />
           </div>
 
-          <button className="p-3 font-bold uppercase bg-green-600 w-2/4 text-white rounded-md hover:bg-green-700 transition-all">
-            Testar
+          <button
+            onClick={handleTestar} // Chamada da função ao clicar no botão
+            className="p-3 font-bold uppercase bg-green-600 w-2/4 text-white rounded-md hover:bg-green-700 transition-all"
+          >
+            {isLoading ? "Testando..." : "Testar"} {/* Texto do botão dinâmico */}
           </button>
         </div>
       </div>
+
+      {/* Renderiza o componente ResultadosDoTeste e passa o resultado da API como props */}
+      {resultado && (
+        <ResultadosDoTeste 
+          resultado={resultado} 
+          jogo={especificacoesPersonalizadas.jogo} // Passando o nome do jogo
+          placaDeVideo={especificacoesPersonalizadas.placaDeVideo} // Passando a placa de vídeo
+          processador={especificacoesPersonalizadas.processador} // Passando o processador
+          memoriaRam={especificacoesPersonalizadas.memoriaRam} // Passando a memória RAM
+        />
+      )}
     </Section>
   );
 };
