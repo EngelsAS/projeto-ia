@@ -17,21 +17,15 @@ interface ResultadosDoTesteProps {
       };
     };
   };
-  jogo: string; 
-  placaDeVideo: string; 
-  processador: string; 
-  memoriaRam: string; 
+  jogo: string;
 }
 
 const ResultadosDoTeste: React.FC<ResultadosDoTesteProps> = ({
   resultado,
-  jogo, 
-  placaDeVideo,
-  processador,
-  memoriaRam,
+  jogo,
 }) => {
   if (!resultado) {
-    return null; 
+    return null;
   }
 
   const {
@@ -47,28 +41,38 @@ const ResultadosDoTeste: React.FC<ResultadosDoTesteProps> = ({
         <article className="border-b border-zinc-400 py-3">
           <Titulo>Preset Baixo: {baixo.fps_medio} FPS</Titulo>
           <p>
-            No preset baixo, o desempenho é excelente. Você obterá entre {baixo.fps_medio} FPS de forma estável, sem precisar de ajustes no hardware.
+            No preset baixo, o desempenho é excelente. Você obterá entre{" "}
+            {baixo.fps_medio} FPS de forma estável, sem precisar de ajustes no
+            hardware.
           </p>
         </article>
         <article className="border-b border-zinc-400 py-3">
           <Titulo>Preset Médio: {medio.fps_medio} FPS</Titulo>
           <p>
-            No preset médio, o jogo rodará próximo a {medio.fps_medio} FPS. Aqui, não há necessidade de mudanças no hardware, já que o desempenho é mais que satisfatório.
+            No preset médio, o jogo rodará próximo a {medio.fps_medio} FPS.
+            Aqui, não há necessidade de mudanças no hardware, já que o
+            desempenho é mais que satisfatório.
           </p>
         </article>
         <article className="border-b border-zinc-400 py-3">
           <Titulo>Preset Alto: {alto.fps_medio} FPS</Titulo>
           <p>
-            No preset alto, você verá uma queda para a faixa de {alto.fps_medio} FPS. O jogo ainda é jogável, mas começa a exigir mais da GPU. Se o foco for rodar o jogo em alto com maior estabilidade, uma placa de vídeo mais forte ajudaria a manter os FPS mais altos e estáveis.
+            No preset alto, você verá uma queda para a faixa de {alto.fps_medio}{" "}
+            FPS. O jogo ainda é jogável, mas começa a exigir mais da GPU. Se o
+            foco for rodar o jogo em alto com maior estabilidade, uma placa de
+            vídeo mais forte ajudaria a manter os FPS mais altos e estáveis.
           </p>
         </article>
         <article className="border-b border-zinc-400 py-3">
           <Titulo>Preset Ultra: {ultra.fps_medio} FPS</Titulo>
           <p>
-            No preset ultra, o jogo fica entre {ultra.fps_medio} FPS, o que começa a afetar a fluidez do gameplay, especialmente em áreas complexas. Aqui, você precisaria melhorar o hardware para garantir um desempenho mais próximo de 60 FPS.
+            No preset ultra, o jogo fica entre {ultra.fps_medio} FPS, o que
+            começa a afetar a fluidez do gameplay, especialmente em áreas
+            complexas. Aqui, você precisaria melhorar o hardware para garantir
+            um desempenho mais próximo de 60 FPS.
           </p>
         </article>
-        <article className="border-b border-zinc-400 py-3">
+        {/* <article className="border-b border-zinc-400 py-3">
           <Titulo>Melhorias de Hardware Recomendadas Para o Preset Ultra</Titulo>
           <p>
             Para garantir um desempenho mais próximo de 60 FPS no preset ultra, considere as seguintes melhorias:
@@ -93,7 +97,7 @@ const ResultadosDoTeste: React.FC<ResultadosDoTesteProps> = ({
               </p>
             </li>
           </ul>
-        </article>
+        </article> */}
       </div>
     </Section>
   );

@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import SelectInput from "../../../../components/selectInput";
 import Titulo from "../../../../components/titulo";
 import Section from "../../../../components/section";
@@ -65,7 +65,7 @@ const ConfigsDoTeste = ({
   especificacoesPersonalizadas,
   setEspecificacoesPersonalizadas,
 }: IProps) => {
-  const [resultado, setResultado] = useState<any>(null); // Adicionando o estado resultado
+  const [resultado, setResultado] = useState(null); // Adicionando o estado resultado
   const [isLoading, setIsLoading] = useState(false); // Estado para gerenciar o loading
 
   // Função para lidar com a execução do teste ao clicar no botão
@@ -78,6 +78,8 @@ const ConfigsDoTeste = ({
         "3627"
       );
       setResultado(resultadoApi); // Armazena o resultado da API no estado
+
+      console.log(resultadoApi);
     } catch (error) {
       console.error("Erro ao executar o teste:", error);
     } finally {
@@ -91,7 +93,9 @@ const ConfigsDoTeste = ({
       <div className="flex w-full justify-between">
         <div className="flex flex-col gap-3">
           <div>
-            <label className="block mb-1 font-semibold">Especificações do teste</label>
+            <label className="block mb-1 font-semibold">
+              Especificações do teste
+            </label>
             <SelectInput
               options={[
                 { label: "Especificações da Máquina", value: 1 },
@@ -99,7 +103,7 @@ const ConfigsDoTeste = ({
               ]}
             />
           </div>
-          <div>
+          {/* <div>
             <label className="block mb-1 font-semibold">Preset Gráfico</label>
             <SelectInput
               options={[
@@ -109,7 +113,7 @@ const ConfigsDoTeste = ({
                 { label: "Ultra", value: 4 },
               ]}
             />
-          </div>
+          </div> */}
 
           <div className="flex flex-col items-start justify-between gap-4 mb-1">
             <label className="block font-semibold">Jogo:</label>
@@ -124,20 +128,12 @@ const ConfigsDoTeste = ({
               className="border border-zinc-400 rounded-md w-full outline-none pl-2 py-1"
             />
           </div>
-          <div className="flex items-center justify-between gap-4">
-            <label className="inline-block mb-1 font-semibold">Taxa de frames desejada:</label>
-            <input
-              className="border-b border-zinc-400 max-w-14 outline-none px-2"
-              type="text"
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                (e.target.value = e.target.value.replace(/[^0-9]/g, ""))
-              }
-            />
-          </div>
         </div>
         <div className="flex flex-col justify-between items-center">
           <div>
-            <label className="block mb-1 font-semibold">Tipo da Aplicação</label>
+            <label className="block mb-1 font-semibold">
+              Tipo da Aplicação
+            </label>
             <SelectInput
               options={[
                 { label: "Jogo de Computador", value: 1 },
@@ -150,19 +146,17 @@ const ConfigsDoTeste = ({
             onClick={handleTestar} // Chamada da função ao clicar no botão
             className="p-3 font-bold uppercase bg-green-600 w-2/4 text-white rounded-md hover:bg-green-700 transition-all"
           >
-            {isLoading ? "Testando..." : "Testar"} {/* Texto do botão dinâmico */}
+            {isLoading ? "Testando..." : "Testar"}{" "}
+            {/* Texto do botão dinâmico */}
           </button>
         </div>
       </div>
 
       {/* Renderiza o componente ResultadosDoTeste e passa o resultado da API como props */}
       {resultado && (
-        <ResultadosDoTeste 
-          resultado={resultado} 
+        <ResultadosDoTeste
+          resultado={resultado}
           jogo={especificacoesPersonalizadas.jogo} // Passando o nome do jogo
-          placaDeVideo={especificacoesPersonalizadas.placaDeVideo} // Passando a placa de vídeo
-          processador={especificacoesPersonalizadas.processador} // Passando o processador
-          memoriaRam={especificacoesPersonalizadas.memoriaRam} // Passando a memória RAM
         />
       )}
     </Section>
