@@ -14,7 +14,7 @@ interface IProps {
 async function runMyRunChat(
   jogo: string = "The Witcher 3",
   specs: string = "Ryzen 5 5600, RX 570, Ram 16GB",
-  fps: string = "3627"
+  fps: string = "60"
 ) {
   function parseCustomString(dataString: string) {
     const jsonString = dataString
@@ -49,6 +49,7 @@ async function runMyRunChat(
           fps_medio: "(mediaDeFPS)",
           percentual_desempenho: "(percentualDesempenho)",
         },
+        dicasDeMelhoriaDeHardware: "",
       },
     },
   }`;
@@ -75,7 +76,7 @@ const ConfigsDoTeste = ({
       const resultadoApi = await runMyRunChat(
         especificacoesPersonalizadas.jogo,
         `${especificacoesPersonalizadas.placaDeVideo}, ${especificacoesPersonalizadas.processador}, ${especificacoesPersonalizadas.memoriaRam}`,
-        "3627"
+        "60"
       );
       setResultado(resultadoApi); // Armazena o resultado da API no estado
 

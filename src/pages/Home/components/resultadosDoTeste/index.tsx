@@ -14,6 +14,7 @@ interface ResultadosDoTesteProps {
         medio: PresetPerformance;
         alto: PresetPerformance;
         ultra: PresetPerformance;
+        dicasDeMelhoriaDeHardware: string;
       };
     };
   };
@@ -30,7 +31,7 @@ const ResultadosDoTeste: React.FC<ResultadosDoTesteProps> = ({
 
   const {
     desempenho_estimado: {
-      "1080p": { baixo, medio, alto, ultra },
+      "1080p": { baixo, medio, alto, ultra, dicasDeMelhoriaDeHardware },
     },
   } = resultado;
 
@@ -72,32 +73,10 @@ const ResultadosDoTeste: React.FC<ResultadosDoTesteProps> = ({
             um desempenho mais próximo de 60 FPS.
           </p>
         </article>
-        {/* <article className="border-b border-zinc-400 py-3">
-          <Titulo>Melhorias de Hardware Recomendadas Para o Preset Ultra</Titulo>
-          <p>
-            Para garantir um desempenho mais próximo de 60 FPS no preset ultra, considere as seguintes melhorias:
-          </p>
-          <ul className="mt-3">
-            <li>
-              <Titulo>~ Placa de Vídeo (GPU):</Titulo>
-              <p>
-                A {placaDeVideo} começa a atingir seu limite em gráficos ultra. Para rodar {jogo} em 60 FPS no preset ultra, você poderia considerar o upgrade para uma placa de vídeo mais poderosa do que {placaDeVideo}. Essas placas têm significativamente mais poder de processamento gráfico.
-              </p>
-            </li>
-            <li>
-              <Titulo>~ Memória RAM:</Titulo>
-              <p>
-                Melhorar para 32 GB de RAM pode ser útil, especialmente se você faz multitarefas. Seus {memoriaRam} em dual channel são suficientes para {jogo}, mas se você planeja jogar títulos mais pesados no futuro, o upgrade pode ser benéfico.
-              </p>
-            </li>
-            <li>
-              <Titulo>~ Processador (CPU):</Titulo>
-              <p>
-                O {processador} é eficiente e atual, sem necessidade imediata de upgrade. O foco deve ser na GPU para aumentar os FPS no preset ultra.
-              </p>
-            </li>
-          </ul>
-        </article> */}
+        <article className="border-b border-zinc-400 py-3">
+          <Titulo>Dicas de Melhoria</Titulo>
+          <p>{dicasDeMelhoriaDeHardware}</p>
+        </article>
       </div>
     </Section>
   );
